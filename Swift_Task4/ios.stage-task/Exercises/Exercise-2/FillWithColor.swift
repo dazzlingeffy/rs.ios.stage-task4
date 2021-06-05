@@ -7,7 +7,7 @@ final class FillWithColor {
         var rrow = row
         var ccolumn = column
         
-        if rrow < image.count && ccolumn < image[rrow].count {
+        if rrow >= 0 && rrow < image.count && ccolumn >= 0 && ccolumn < image[rrow].count && image[rrow][ccolumn] != newColor {
             let oldColor = image[rrow][ccolumn]
             while image[rrow][ccolumn] == oldColor {
                 image[rrow][ccolumn] = newColor
