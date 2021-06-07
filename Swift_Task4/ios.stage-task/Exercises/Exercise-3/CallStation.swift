@@ -25,14 +25,23 @@ extension CallStation: Station {
     func execute(action: CallAction) -> CallID? {
         switch action {
         case .start(let from, let to):
+            if !usersArray.contains(from) && !usersArray.contains(to) {
+                return nil
+            }
             var call = Call(id: UUID(), incomingUser: from, outgoingUser: to, status: .calling)
             if (calls(user: to).count > 0) {
                 call.status = .ended(reason: .userBusy)
+            } else if (!usersArray.contains(to)) {
+                call.status = .ended(reason: .error)
             }
             callsArray.insert(call, at: 0)
             return call.id
         case .answer(let from):
             if let index = callsArray.firstIndex(where: {$0.outgoingUser == from}) {
+                if !usersArray.contains(from) {
+                    callsArray[index].status = .ended(reason: .error)
+                    return nil
+                }
                 callsArray[index].status = .talk
                 return callsArray[index].id
             }
@@ -67,11 +76,15 @@ extension CallStation: Station {
     }
     
     func currentCall(user: User) -> Call? {
-        if let index = callsArray.firstIndex(where: {$0.status == .ended(reason: .end) || $0.status == .ended(reason: .cancel)}) {
-            callsArray.remove(at: index)
-        }
+//        while true {
+//            if let index = callsArray.firstIndex(where: {$0.status == .ended(reason: .end) || $0.status == .ended(reason: .cancel)}) {
+//                callsArray.remove(at: index)
+//            } else {
+//                break
+//            }
+//        }
         for c in callsArray {
-            if c.incomingUser == user || c.outgoingUser == user {
+            if (c.incomingUser == user || c.outgoingUser == user) && (c.status == .calling || c.status == .talk){
                 return c
             }
         }
