@@ -8,7 +8,7 @@ public extension Int {
         }
         var res = ""
         var n = self
-        if (n > 1000) {
+        if (n >= 1000) {
             for _ in 0..<(n / 1000) {
                 res += "M"
             }
