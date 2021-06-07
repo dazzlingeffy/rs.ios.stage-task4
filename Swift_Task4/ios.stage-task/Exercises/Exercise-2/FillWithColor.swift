@@ -18,7 +18,7 @@ final class FillWithColor {
                     ccolumn -= 1
                 }
             }
-            if column + 1 == image[row].count - 1 && row < image.count - 1 {
+            if column + 1 == image[row].count && row < image.count - 1 {
                 rrow = row + 1
                 ccolumn = 0
             } else if column + 1 < image[row].count {
